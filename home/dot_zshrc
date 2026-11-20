@@ -1,8 +1,15 @@
-# If you come from bash you might have to change your $PATH.
-export PATH=$HOME/bin:/usr/local/go/bin:/usr/local/bin:$PATH
+export PNPM_HOME="$HOME/.local/share/pnpm"
+export PATH=$HOME/bin:$HOME/go/bin:/usr/local/go/bin:/usr/local/bin:$PNPM_HOME:$PATH
+export PATH="/usr/local/cuda-12.6/bin:$PATH"
+# export LD_LIBRARY_PATH="/usr/local/cuda-12.6/lib64:$LD_LIBRARY_PATH"
+export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+export PATH=$HOME/Projects/cevoid/bin:$PATH
+export ANDROID_HOME=$HOME/Android/Sdk
+export PATH=$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator
+
 
 # Path to your oh-my-zsh installation.
-export ZSH="/home/hamidify/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 ZSH_THEME="robbyrussell"
 plugins=(git)
@@ -43,5 +50,29 @@ add-zsh-hook chpwd load-nvmrc
 load-nvmrc
 
 alias vim="nvim"
+alias mc="mullvad connect"
+alias md="mullvad disconnect"
+alias ms="mullvad status"
+alias mr="mullvad reconnect"
+alias ts="sudo tailscale"
+alias stu="sudo tailscale up"
+alias std="sudo tailscale down"
+alias sts="sudo tailscale status"
+
+alias compass="env -u ELECTRON_RUN_AS_NODE mongodb-compass --password-store="gnome-libsecret" --ignore-additional-command-line-flags > /dev/null 2>&1 &!"
+# alias compass="nohup mongodb-compass --password-store="gnome-libsecret" --ignore-additional-command-line-flags &"
+
 # fixs ssh
-eval $(ssh-agent)
+# eval $(ssh-agent)
+export PATH=$PATH:$HOME/.maestro/bin
+
+# bun completions
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+
+# Added by Antigravity CLI installer
+export PATH="$HOME/.local/bin:$PATH"
