@@ -1,0 +1,82 @@
+general {
+        colors = true
+        interval = 5
+        output_format = "i3bar"
+        color_good = "#a6e3a1"
+        color_degraded = "#fab387"
+        color_bad = "#f38ba8"
+        markup = "pango"
+}
+
+order += "wireless _first_"
+order += "ethernet _first_"
+order += "path_exists VPN"
+order += "path_exists TS"
+order += "battery all"
+order += "disk /"
+order += "load"
+order += "memory"
+order += "cpu_usage"
+order += "volume master"
+order += "tztime local"
+
+wireless _first_ {
+        format_up = "%essid %quality"
+        format_down = ""
+}
+
+ethernet _first_ {
+        format_up = "%ip"
+        format_down = ""
+}
+
+path_exists VPN {
+        # path exists when a VPN tunnel launched by wg0-mullvad is active
+        path = "/proc/sys/net/ipv4/conf/wg0-mullvad"
+}
+
+path_exists TS {
+        # path exists when a VPN tunnel launched by tailscale0 is active
+        path = "/proc/sys/net/ipv4/conf/tailscale0"
+}
+
+battery all {
+        format = "<span color='#94e2d5'>-> </span>%status %percentage %remaining"
+        format_down = ""
+        integer_battery_capacity = true
+        low_threshold = 15
+        threshold_type = "percentage"
+}
+
+disk "/" {
+        format = "<span color='#fab387'>Disk:</span> %avail"
+        low_threshold = 10
+        threshold_type = "gbytes_avail"
+}
+
+load {
+        format = "<span color='#f9e2af'>Load:</span> %1min"
+        max_threshold = 12
+}
+
+cpu_usage {
+        degraded_threshold = 70
+        max_threshold = 90
+        format = "<span color='#a6e3a1'>Cpu:</span> %usage"
+}
+
+memory {
+        threshold_degraded = "300M"
+        format_degraded = "<span color='#cba6f7'>Mem:</span> %available"
+        format = "<span color='#cba6f7'>Mem:</span> %available"
+}
+
+tztime local {
+        format = "%a %Y-%m-%d %I:%M %p"
+}
+
+volume master {
+        device = "pulse"
+        format = "<span color='#74c7ec'>Vol:</span> %volume"
+        format_muted = "<span color='#74c7ec'>Vol:</span> muted"
+}

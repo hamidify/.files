@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# Opens the login apps one at a time and moves each new window to its workspace.
+# All Chrome profiles share one window class, so assign rules cannot tell them
+# apart; waiting for each launch's own window can.
+set -u
+
+WINDOW_WAIT_SECONDS=30
+
+# Usage: launch_on_workspace <workspace> <window class> <command...>
+launch_on_workspace() {
+  local workspace=$1 class=$2
+  shift 2
+
+  local events
+  events=$(mktemp)
+  timeout "$WINDOW_WAIT_SECONDS" i3-msg -t subscribe -m '["window"]' >"$events" &
+  local subscriber=$!
+  sleep 0.2
+
+  "$@" >/dev/null 2>&1 &
+
+  local con_id=""
+  for _ in $(seq $((WINDOW_WAIT_SECONDS * 4))); do
+    con_id=$(jq -r --arg class "$class" \
+      'select(.change == "new" and .container.window_properties.class == $class) | .container.id' \
+      "$events" 2>/dev/null | head -1)
+    [ -n "$con_id" ] && break
+    sleep 0.25
+  done
+
+  kill "$subscriber" 2>/dev/null
+  rm -f "$events"
+  [ -n "$con_id" ] && i3-msg -q "[con_id=$con_id] move container to workspace number $workspace"
+}
+
+chrome_profile() {
+  google-chrome --new-window --profile-directory="$1"
+}
+
+cursor &
+launch_on_workspace 2 Google-chrome chrome_profile "Profile 16"
+launch_on_workspace 3 Gnome-terminal-server gnome-terminal
+mongodb-compass &
+launch_on_workspace 5 Google-chrome chrome_profile "Profile 16"
+launch_on_workspace 6 Google-chrome chrome_profile "Profile 26"
