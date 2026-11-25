@@ -40,6 +40,6 @@ chrome_profile() {
 cursor &
 launch_on_workspace 2 Google-chrome chrome_profile "Profile 16"
 launch_on_workspace 3 Gnome-terminal-server gnome-terminal
-mongodb-compass &
+env -u ELECTRON_RUN_AS_NODE mongodb-compass --password-store=gnome-libsecret --ignore-additional-command-line-flags >/dev/null 2>&1 &
 launch_on_workspace 5 Google-chrome chrome_profile "Profile 16"
 launch_on_workspace 6 Google-chrome chrome_profile "Profile 26"
